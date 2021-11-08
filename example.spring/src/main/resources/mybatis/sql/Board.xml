@@ -23,9 +23,9 @@
 		ORDER BY B.REG_DATE DESC
 	</select>
 	
-	<insert id="save" parameterType="com.example.demo.mvc.domain.Board">
-		<selectKey keyProperty="t_board_seq" resultType="integer" order="BEFORE">
-			SELECT T_BOARD_SEQ.nextval FROM DUAL;
+	<insert id="save" parameterType="com.example.demo.parameter.BoardParameter">
+		<selectKey keyProperty="boardSeq" resultType="integer" order="BEFORE">
+			SELECT T_BOARD_SEQ.nextval FROM DUAL
 		</selectKey>
 		INSERT INTO T_BOARD
 		(
@@ -36,10 +36,10 @@
 		)
 		VALUES
 		(
-			#{t_board_seq}
+			#{boardSeq},
 			#{title},
 			#{contents},
-			NOW()
+			SYSDATE
 		)
 	</insert>
 	

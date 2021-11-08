@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.mvc.domain.Board;
 import com.example.demo.mvc.repository.BoardRepository;
+import com.example.demo.parameter.BoardParameter;
 
 
 /*
@@ -37,28 +38,27 @@ public class BoardService {
 	}
 	
 	/**
-	 * 등록 처리
+	 * 등록/수정 처리
 	 * @param board
 	 */
-	public int save(Board board) {
-		repository.save(board);
-		return board.getBoardSeq();
+	public void save(BoardParameter parameter) {
+		// 조회하여 리턴된 정보
+		Board board = repository.get(parameter.getBoardSeq());
+		if(board == null) {
+			repository.save(parameter);
+		}else {
+			repository.update(board);
+		}
 	}
 	
 	/**
 	 * 삭제 처리
 	 * @param boardSeq
 	 */
-	public void delete(int boardSeq) {
+	public boolean delete(int boardSeq) {
 		repository.delete(boardSeq);
+		return true;
 	}
-	
-	/**
-	 * 업데이트 처리
-	 * @param board
-	 */
-	public void update(Board board) {
-		repository.update(board);
-	}
+
 
 }
