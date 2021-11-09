@@ -3,8 +3,7 @@ package com.example.demo.mvc.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.configuration.exception.BaseException;
+import com.example.demo.configuration.http.BaseResponse;
+import com.example.demo.configuration.http.BaseResponseCode;
 import com.example.demo.mvc.domain.Board;
-import com.example.demo.mvc.repository.BoardRepository;
 import com.example.demo.mvc.service.BoardService;
 import com.example.demo.parameter.BoardParameter;
 
@@ -41,8 +42,8 @@ public class BoardController {
 	 */
 	@GetMapping
 	@ApiOperation(value = "목록 조회", notes = "게시물 목록 정보를 조회합니다.")
-	public List<Board> getList(){
-		return boardService.getList();
+	public BaseResponse<List<Board>> getList(){
+		return new BaseResponse<List<Board>>(boardService.getList());
 	}
 	
 	/**
@@ -55,8 +56,12 @@ public class BoardController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
 	})
-	public Board get(@PathVariable int boardSeq) {
-		return boardService.get(boardSeq);
+	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+		Board board = boardService.get(boardSeq);
+		if(board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
+		}
+		return new BaseResponse<Board>(board);
 	}
 	
 	/**
@@ -70,9 +75,17 @@ public class BoardController {
 		@ApiImplicitParam(name = "title", value = "게시물 제목", example = "changon_title"),
 		@ApiImplicitParam(name = "contents", value = "게시물 내용", example = "changon_contents"),
 	})
-	public int save(BoardParameter parameter) {
+	public BaseResponse<Integer> save(BoardParameter parameter) {
+		// 제목 필수 체크
+		if(ObjectUtils.isEmpty(parameter.getTitle())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "title", "제목" });
+		}
+		// 내용 필수 체크
+		if (ObjectUtils.isEmpty(parameter.getContents())) {
+			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "contents", "내용" });
+		}
 		boardService.save(parameter);
-		return parameter.getBoardSeq();
+		return new BaseResponse<Integer>(parameter.getBoardSeq());
 	}
 	
 	/**
@@ -84,15 +97,13 @@ public class BoardController {
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
 	})
-	public boolean delete(@PathVariable int boardSeq) {
+	public BaseResponse<Boolean> delete(@PathVariable int boardSeq) {
 		Board board = boardService.get(boardSeq);
 		if(board == null) {
-			return false;
+			return new BaseResponse<Boolean>(false);
 		}
 		boardService.delete(boardSeq);
-		return true;
+		return new BaseResponse<Boolean>(true);
 	}
-	
-
 
 }
