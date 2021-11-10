@@ -55,4 +55,5 @@
 		DELETE FROM T_BOARD
 		WHERE BOARD_SEQ = #{BOARDSEQ}
 	</delete>
+	
 </mapper>

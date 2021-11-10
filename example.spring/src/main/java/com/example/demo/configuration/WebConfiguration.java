@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class WebConfiguration {
+public class WebConfiguration{
 	
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
@@ -19,5 +19,4 @@ public class WebConfiguration {
 		source.setUseCodeAsDefaultMessage(true);
 		return source;
 	}
-
 }
