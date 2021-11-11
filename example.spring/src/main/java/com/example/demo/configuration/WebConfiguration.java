@@ -2,6 +2,7 @@ package com.example.demo.configuration;
 
 import java.util.Locale;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -40,6 +41,13 @@ public class WebConfiguration{
 		jsonView.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
 		jsonView.setObjectMapper(objectMapper());
 		return jsonView;
+	}
+	
+	@Bean
+	public FilterRegistrationBean<SiteMeshConfiguration> sitemeshBean(){
+		FilterRegistrationBean<SiteMeshConfiguration> filter = new FilterRegistrationBean<SiteMeshConfiguration>();
+		filter.setFilter(new SiteMeshConfiguration());
+		return filter;
 	}
 	
 }

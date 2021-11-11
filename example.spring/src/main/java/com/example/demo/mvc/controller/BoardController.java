@@ -48,6 +48,7 @@ public class BoardController {
 	public String list(@PathVariable MenuType menuType, org.springframework.ui.Model model){
 		List<Board> boardList = boardService.getList();
 		model.addAttribute("boardList", boardList);
+		model.addAttribute("menuType", menuType);
 		return "/board/list";
 	}
 	
@@ -56,10 +57,11 @@ public class BoardController {
 	 * @param boardSeq
 	 * @return
 	 */
-	@GetMapping("/detail/{boardSeq}")
-	public String detail(@PathVariable int boardSeq, org.springframework.ui.Model model) {
+	@GetMapping("/{menuType}/{boardSeq}")
+	public String detail(@PathVariable MenuType menuType ,@PathVariable int boardSeq, org.springframework.ui.Model model) {
 		Board board = boardService.get(boardSeq);
 		model.addAttribute("board", board);
+		model.addAttribute("menuType", menuType);
 		return "/board/detail";
 	}
 	
@@ -68,9 +70,11 @@ public class BoardController {
 	 * @param parameter
 	 * @param model
 	 */
-	@GetMapping("/form")
-	public void form(BoardParameter parameter, org.springframework.ui.Model model) {
+	@GetMapping("/{menuType}/form")
+	public String form(@PathVariable MenuType menuType, BoardParameter parameter, org.springframework.ui.Model model) {
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("menuType", menuType);
+		return "/board/form";
 	}
 	
 	/**
@@ -78,14 +82,15 @@ public class BoardController {
 	 * @param parameter
 	 * @param model
 	 */
-	@GetMapping("/edit/{boardSeq}")
-	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, org.springframework.ui.Model model) {
+	@GetMapping("/{menuType}/edit/{boardSeq}")
+	public String edit(@PathVariable MenuType menuType, @PathVariable(required = true) int boardSeq, BoardParameter parameter, org.springframework.ui.Model model) {
 		Board board = boardService.get(parameter.getBoardSeq());
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
 		model.addAttribute("board", board);
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("menuType", menuType);
 		return "/board/form";
 	}
 	
@@ -93,7 +98,7 @@ public class BoardController {
 	 * 등록/수정 처리
 	 * @param board
 	 */
-	@PostMapping("/save")
+	@PostMapping("/{menuType}/save")
 	@ResponseBody
 	@ApiOperation(value = "등록/수정 처리", notes = "신규 게시물 저장 및 기존 게시물 수정.")
 	@ApiImplicitParams({
