@@ -47,7 +47,7 @@ public class BoardService {
 		if(board == null) {
 			repository.save(parameter);
 		}else {
-			repository.update(board);
+			repository.update(parameter);
 		}
 	}
 	

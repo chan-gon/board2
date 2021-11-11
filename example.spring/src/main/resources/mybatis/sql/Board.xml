@@ -29,6 +29,7 @@
 		</selectKey>
 		INSERT INTO T_BOARD
 		(
+			BOARD_TYPE,
 			BOARD_SEQ,
 			TITLE,
 			CONTENTS,
@@ -36,6 +37,7 @@
 		)
 		VALUES
 		(
+			#{boardType.code},
 			#{boardSeq},
 			#{title},
 			#{contents},
@@ -47,7 +49,7 @@
 		UPDATE T_BOARD
 		SET
 			TITLE = #{title},
-			CONTENTS = #{contents},
+			CONTENTS = #{contents}
 		WHERE BOARD_SEQ = #{boardSeq}
 	</update>
 	

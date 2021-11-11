@@ -20,7 +20,7 @@ public interface BoardRepository {
 	
 	void save(BoardParameter board);
 	
-	void update(Board board);
+	void update(BoardParameter board);
 
 	void delete(int boardSeq);
 }

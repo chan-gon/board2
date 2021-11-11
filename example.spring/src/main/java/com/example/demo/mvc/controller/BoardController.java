@@ -18,6 +18,7 @@ import com.example.demo.configuration.exception.BaseException;
 import com.example.demo.configuration.http.BaseResponse;
 import com.example.demo.configuration.http.BaseResponseCode;
 import com.example.demo.mvc.domain.Board;
+import com.example.demo.mvc.domain.MenuType;
 import com.example.demo.mvc.service.BoardService;
 import com.example.demo.parameter.BoardParameter;
 
@@ -33,8 +34,6 @@ import io.swagger.models.Model;
  * @author = 김찬곤
  */
 @Controller
-@RequestMapping("/board")
-@Api(tags = "게시판 API")
 public class BoardController {
 	
 	@Autowired
@@ -44,44 +43,50 @@ public class BoardController {
 	 * 목록 리턴
 	 * @return
 	 */
-	@GetMapping
-	@ResponseBody
+	@GetMapping("{menuType}")
 	@ApiOperation(value = "목록 조회", notes = "게시물 목록 정보를 조회합니다.")
-	public BaseResponse<List<Board>> getList(){
-		return new BaseResponse<List<Board>>(boardService.getList());
+	public String list(@PathVariable MenuType menuType, org.springframework.ui.Model model){
+		List<Board> boardList = boardService.getList();
+		model.addAttribute("boardList", boardList);
+		return "/board/list";
 	}
 	
 	/**
-	 * 상세 정보 리턴
+	 * 상세 페이지
 	 * @param boardSeq
 	 * @return
 	 */
-	@GetMapping("/{boardSeq}")
-	@ResponseBody
-	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
-	})
-	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+	@GetMapping("/detail/{boardSeq}")
+	public String detail(@PathVariable int boardSeq, org.springframework.ui.Model model) {
 		Board board = boardService.get(boardSeq);
-		if(board == null) {
-			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
-		}
-		return new BaseResponse<Board>(board);
+		model.addAttribute("board", board);
+		return "/board/detail";
 	}
 	
 	/**
-	 * 등록/수정 화면
+	 * 등록 화면
 	 * @param parameter
 	 * @param model
 	 */
 	@GetMapping("/form")
-	public void home(BoardParameter parameter, org.springframework.ui.Model model) {
-		if(parameter.getBoardSeq() > 0) {
-			Board board = boardService.get(parameter.getBoardSeq());
-			model.addAttribute("board", board);
-		}
+	public void form(BoardParameter parameter, org.springframework.ui.Model model) {
 		model.addAttribute("parameter", parameter);
+	}
+	
+	/**
+	 * 수정 화면
+	 * @param parameter
+	 * @param model
+	 */
+	@GetMapping("/edit/{boardSeq}")
+	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, org.springframework.ui.Model model) {
+		Board board = boardService.get(parameter.getBoardSeq());
+		if(board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
+		}
+		model.addAttribute("board", board);
+		model.addAttribute("parameter", parameter);
+		return "/board/form";
 	}
 	
 	/**
