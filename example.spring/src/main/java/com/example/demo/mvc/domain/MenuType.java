@@ -7,10 +7,10 @@ package com.example.demo.mvc.domain;
  */
 public enum MenuType{
 	
-	community(BoardType.COMMUNITY),
-	notice(BoardType.NOTICE),
-	faq(BoardType.FAQ),
-	inquiry(BoardType.INQUIRY),
+	community(BoardType.community),
+	notice(BoardType.notice),
+	faq(BoardType.faq),
+	inquiry(BoardType.inquiry),
 	;
 	
 	private BoardType boardType;

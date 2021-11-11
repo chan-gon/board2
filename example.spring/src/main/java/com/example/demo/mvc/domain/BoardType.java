@@ -7,10 +7,10 @@ package com.example.demo.mvc.domain;
  *
  */
 public enum BoardType implements BaseCodeLabelEnum {
-	COMMUNITY("커뮤니티"),
-	NOTICE("공지사항"),
-	FAQ("자주묻는 질문"),
-	INQUIRY("1:1문의"),
+	community("커뮤니티"),
+	notice("공지사항"),
+	faq("자주묻는 질문"),
+	inquiry("1:1문의"),
 	;
 	
 	private String code;
