@@ -50,4 +50,9 @@ public class WebConfiguration{
 		return filter;
 	}
 	
+    @Bean
+    public GlobalConfig config() {
+        return new GlobalConfig();
+    }
+	
 }

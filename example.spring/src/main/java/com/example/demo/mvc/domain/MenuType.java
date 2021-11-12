@@ -19,4 +19,8 @@ public enum MenuType{
 		this.boardType = boardType;
 	}
 
+	public BoardType boardType() {
+		return boardType;
+	}
+	
 }

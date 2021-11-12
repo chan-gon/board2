@@ -21,6 +21,7 @@ import com.example.demo.mvc.domain.Board;
 import com.example.demo.mvc.domain.MenuType;
 import com.example.demo.mvc.service.BoardService;
 import com.example.demo.parameter.BoardParameter;
+import com.example.demo.parameter.BoardSearchParameter;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,8 +46,8 @@ public class BoardController {
 	 */
 	@GetMapping("{menuType}")
 	@ApiOperation(value = "목록 조회", notes = "게시물 목록 정보를 조회합니다.")
-	public String list(@PathVariable MenuType menuType, org.springframework.ui.Model model){
-		List<Board> boardList = boardService.getList();
+	public String list(@PathVariable MenuType menuType, BoardSearchParameter paramter, org.springframework.ui.Model model){
+		List<Board> boardList = boardService.getList(paramter);
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("menuType", menuType);
 		return "/board/list";
